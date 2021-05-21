@@ -81,7 +81,15 @@ except ModuleNotFoundError :
    Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient le sinformations qu'on cherche.
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
    
-   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page%20centre%20compi%C3%A8gne.png?" width=50% height=50%>
+   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page%20centre%20compi%C3%A8gne.png?" width=50% height=50%>  
+   
+   Ensuite inspecter le code (clicker droit sur la page puis choix "Inspecter" ou combinaisons de ctrl+maj+i)
+   
+   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page_2_menu_click_droit.png" width=50% height=50%>  
+   
+   Cela va ouvrir la console. Une fois la console ouverte clicquer sur "Network" puis sur "XHR":
+   
+   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/choix_network_XHr.png" width=50% height=50%> 
    
 
  
