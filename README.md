@@ -91,5 +91,7 @@ except ModuleNotFoundError :
    
    <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/choix_network_XHr.png" width=50% height=50%> 
    
+   Puis choisissez un motif de consultation. Celà va entrainer l'interrogation de l'api via le fichier `availabilities.json` 
+   
 
  
