@@ -80,7 +80,7 @@ except ModuleNotFoundError :
   * ## La boucle qui va permettre d'interroger le site du centre de vaccination
    Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient le sinformations qu'on cherche.
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
-   ![page du centre de compiègne]('Images/page centre compiègne.png')
+   ![page du centre de compiègne](https://github.com/echidne/CovidCompiegne/blob/main/Images/page%20centre%20compi%C3%A8gne.png?raw=true)
    
 
  
