@@ -86,7 +86,7 @@ except ModuleNotFoundError :
    ```
   
   * ## La boucle qui va permettre d'interroger le site du centre de vaccination
-   Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient le sinformations qu'on cherche.
+   Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient les informations qu'on cherche.
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
    
    <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page%20centre%20compi%C3%A8gne.png?" width=50% height=50%>  
@@ -101,7 +101,38 @@ except ModuleNotFoundError :
    
    Puis choisissez un motif de consultation. Celà va entrainer l'interrogation de l'api via le fichier `availabilities.json`.
    
-   <img src= "https://github.com/echidne/CovidCompiegne/blob/main/Images/voir_lefichier_json.png" width=50% height=50%>
+   <img src= "https://github.com/echidne/CovidCompiegne/blob/main/Images/voir_lefichier_json.png" width=50% height=50%>  
    
-
+   Exemple d'un lien d'interrogation (pour une première injection Pfizer au centre de Compiègne):  
+   https://www.doctolib.fr/availabilities.json?start_date=2021-05-22&visit_motive_ids=2553369&agenda_ids=470011-434292-434257-412372-435494-448029-432422-412370&insurance_sector=public&practice_ids=165271&destroy_temporary=true&limit=4   
+   
+   L'interogation est donc structurée comme suit :  
+   start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=3   
+   
+   Alors comment va-t-on utiliser ça? Pour ma part je suis allé au plus simple :
+   * La date du jour au format ISO je sais la récupérer dans le script (voir plus loin).  
+   * L'id qui indique le type d'injection ne varie pas (pour un centre donné- si on change de centre il est possible que l'id change) . Par exemple à Compiègne, l'id pour une première injection Pfizer est _2553369_ et pour une première dose de Moderna c'est _2585896_.  
+   * Les agendas_ids varient selon le centre de vaccination, le type de vaccination et le vaccinateur.  
+   * Le practice_ids est l'id qui caractérise le centre de vaccination.
+   Ne sachant pas comment les récupérer on the fly, j'ai décidé de rentrer les 3 derniers en dur dans le code.
+   
+   Maintenant que donne l'interrogation de l'api? Et bien ça renvoie un fichier `.json` qui contient les informations qu'on recherche.
+   exemple 1 :  
+   `{"availabilities":[],"total":0,"reason":"no_availabilities","message":"Aucune disponibilité en ligne.","number_future_vaccinations":39499}`
+   Bon là pas de chance, pas de doses disponibles ("total":0) et donc pas de disponibilité pour réserver ("availabilities":[])  
+   
+   exemple 2:   
+   `{"total":0,"availabilities":[{"date":"2021-05-22","slots":[]},{"date":"2021-05-23","slots":[]},{"date":"2021-05-24","slots":[]},{"date":"2021-05-25","slots":[]}],"next_slot":"2021-07-02"}`  
+   Toujours pas de chance, pas de doses disponibles ("total":0), la liste associée à "availabilities" n'est pas vide mais les "slots" sont bien vides. Par contre on indique une prochiane disponibilité le 02 juillet ("next_slot":"2021-07-02").  
+   
+   exemple 3:  
+   `{"availabilities":[{"date":"2021-05-22","slots":[],"substitution":null},{"date":"2021-05-23","slots":[],"substitution":null},{"date":"2021-05-24","slots":[],"substitution":null},{"date":"2021-05-25","slots":[{"agenda_id":252502,"practitioner_agenda_id":null,"start_date":"2021-05-25T12:25:00.000+02:00","end_date":"2021-05-25T12:35:00.000+02:00","steps":....,"substitution":null}],"total":3}`   
+   Là il y a des doses dispo (mais bon j'ai triché c'est chez un medecin de Lyon qui vaccine avec l'Atrazenca :) ). Il y a donc 3 doses de disponibles ("total":3) et les dates où on peut se vaire vacciner avec les créneaux horaires sont indiquées.   
+   
+   Donc le plus simple pour savoir si des doses sont disponibles c'est d'interroger l'api via le lien cité plus haut avec `request` de récupérer la réponse par un `get` dans une varriable et de récupérer la valeur associée à 'total' :
+   ```
+   req = requests.get(https://www.doctolib.fr/availabilities.json?start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=3)
+   doses_du_vaccin_disponibles = req.json().get('total')
+   ```
+   Seulement si 
  
