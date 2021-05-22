@@ -18,16 +18,14 @@ N.B. : J'ai choisi une notification sous forme de 'toaster' mais qui ne va fonct
 
 # Description du code 
 * ## les modules nécessaires
-1. ### Les modules Builtins : 
+1. ### Les librairies standards: 
    On va avoir besoin de :  
-   * `requests` pour interroger le site du centre de vaccination
    * `datetime` pour récupérer la date du jour
    * `time` pour créer des pauses entre chaque interrogation pour éviter de surcharger le site
    * `webbrowser`pour ouvrir la page du site via la notification
    * `subprocess` et `sys` pour lancer l'execution de la commande shell d'installation du module `win10toast_click` à la première exécution de l'appli
    * `platform` pour savoir si on est bien sous le bon système d'exploitation
 ``` python
-import requests
 from time import sleep
 from datetime import date
 import webbrowser
@@ -36,9 +34,19 @@ import sys
 import platform
 ```
 
-2. ### Le module `win10toast_click` :
+2. ### Les modules non-standards:
+   Pour ce projet on va utiliser deux modules non standards: [requests](https://fr.python-requests.org/en/latest/) et [Win10toast_click](https://pypi.org/project/win10toast-click/). Vous avez peut-être déjà installé le premier pour un projet web car c'est une librairie trés répandue mais probablement pas le second. si vous ne les avez pas déjà installé le code prend soin de les installer. Bien sûr libre à vous de les installer par vous même si la méthode in code ne vous convient pas ou ne foncitonne pas. Le vous laisse jetter un oeil aux liens fournis pour les processus d'installation particuliers.
+   * Le module `requests`:
+  Cette librairie permet de réaliser des requêtes HTTP. Elle a été créée pour rendre "plus humaine " l'utilisation de la librairie standrad `urllib`
+  
+   * Le module `win10toast_click` :
   Ce [module](https://pypi.org/project/win10toast-click/) permet de créer des toast, c'est à dire des notfications à durée limitée sous windows 10. Il existe plusieurs versions mais celle ci permet aussi de lancer une page web associée. Comme elle n'est surement pas installée à la première utilisation de l'appli on l'installe aprés avoir vérifier qu'on est bien sous windows 10 :
   ``` python
+  try :
+    import requests
+except ModuleNotFoundError :
+    subprocess.run([sys.executable, "-m", "pip", "install", "requests"])
+    
   try :
     from win10toast_click import ToastNotifier
 except ModuleNotFoundError :
@@ -91,7 +99,9 @@ except ModuleNotFoundError :
    
    <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/choix_network_XHr.png" width=50% height=50%> 
    
-   Puis choisissez un motif de consultation. Celà va entrainer l'interrogation de l'api via le fichier `availabilities.json` 
+   Puis choisissez un motif de consultation. Celà va entrainer l'interrogation de l'api via le fichier `availabilities.json`.
+   
+   <img src= "https://github.com/echidne/CovidCompiegne/blob/main/Images/voir_lefichier_json.png" width=50% height=50%>
    
 
  
