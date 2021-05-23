@@ -25,9 +25,11 @@ N.B. : J'ai choisi une notification sous forme de 'toaster' mais qui ne va fonct
    * `webbrowser`pour ouvrir la page du site via la notification
    * `subprocess` et `sys` pour lancer l'execution de la commande shell d'installation du module `win10toast_click` à la première exécution de l'appli
    * `platform` pour savoir si on est bien sous le bon système d'exploitation
+   * `json.decode` pour traiter les problèmes éventuels avec les données json
 ``` python
 from time import sleep
 from datetime import date
+from json.decode import JSONDecodeError
 import webbrowser
 import subprocess
 import sys
@@ -107,7 +109,7 @@ except ModuleNotFoundError :
    https://www.doctolib.fr/availabilities.json?start_date=2021-05-22&visit_motive_ids=2553369&agenda_ids=470011-434292-434257-412372-435494-448029-432422-412370&insurance_sector=public&practice_ids=165271&destroy_temporary=true&limit=4   
    
    L'interogation est donc structurée comme suit :  
-   start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=3   
+   start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4   
    
    Alors comment va-t-on utiliser ça? Pour ma part je suis allé au plus simple :
    * La date du jour au format ISO je sais la récupérer dans le script (voir plus loin).  
@@ -116,7 +118,15 @@ except ModuleNotFoundError :
    * Le practice_ids est l'id qui caractérise le centre de vaccination.
    Ne sachant pas comment les récupérer on the fly, j'ai décidé de rentrer les 3 derniers en dur dans le code.
    
-   Maintenant que donne l'interrogation de l'api? Et bien ça renvoie un fichier `.json` qui contient les informations qu'on recherche.
+   Maintenant que donne l'interrogation de l'api? Et bien ça renvoie des données de type `.json` qui contient les informations qu'on recherche, et comme `requests`est une librairie bien faite elle fournit une fonction qui permet de décoder le retour de la requête en un sympatique dictionnaire. 
+   
+   Par exemple :
+   `req = requests.get('https://www.doctolib.fr/availabilities.json?start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4', headers = header)
+   
+   print(req.json())`   
+   
+   peut donner :
+   
    exemple 1 :  
    `{"availabilities":[],"total":0,"reason":"no_availabilities","message":"Aucune disponibilité en ligne.","number_future_vaccinations":39499}`
    Bon là pas de chance, pas de doses disponibles ("total":0) et donc pas de disponibilité pour réserver ("availabilities":[])  
@@ -130,9 +140,8 @@ except ModuleNotFoundError :
    Là il y a des doses dispo (mais bon j'ai triché c'est chez un medecin de Lyon qui vaccine avec l'Atrazenca :) ). Il y a donc 3 doses de disponibles ("total":3) et les dates où on peut se vaire vacciner avec les créneaux horaires sont indiquées.   
    
    Donc le plus simple pour savoir si des doses sont disponibles c'est d'interroger l'api via le lien cité plus haut avec `request` de récupérer la réponse par un `get` dans une varriable et de récupérer la valeur associée à 'total' :
-   ```
-   req = requests.get(https://www.doctolib.fr/availabilities.json?start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=3)
-   doses_du_vaccin_disponibles = req.json().get('total')
-   ```
-   Seulement si 
+   
+   `doses_du_vaccin_disponibles = req.json().get('total')`
+   
+   Si la requête s'est bien passée alors vous aller récupérer une valeur numérique pour le nombre de doses. Si, par malheur, la requête a échoué alors cela créera un JSONDecodeError et on avertira l'utilisateur.
  
