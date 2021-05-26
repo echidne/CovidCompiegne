@@ -84,6 +84,14 @@ except ModuleNotFoundError :
  3. la fonction `notif_toast`  
    Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouvez un moyen de le faire **forkez le moi**.  
    
+   Notification de départ:  
+   ![notif1](https://github.com/echidne/CovidCompiegne/blob/main/Images/notif%201.png)  
+   
+   Notification quand des doses ont été trouvées :  
+   ![notif2](https://github.com/echidne/CovidCompiegne/blob/main/Images/notif%202.png)  
+   
+   Si par hasard le notifications n'apparaissaient pas, veuillez vérifier que les notifications sont activées dans les paramètres windows ("Notifications et actions") ou que "l'assistant de concentration" ne les bloque pas  
+   
  4. la fonction `requete_doctolib`  
    C'est la fonction qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin: . En effet je n'ai pas trouver moyen de récupérer les information directemetn sur le site via le code (si vous trouvez un moyen de le faire **forkez le moi**).  
    Avant de commencer il faut récupérer l'adresse de l'api et ses paramêtres :  
@@ -153,5 +161,32 @@ except ModuleNotFoundError :
    
    `doses_du_vaccin_disponibles = req.json().get('total')`
    
-   Si la requête s'est bien passée alors vous aller récupérer une valeur numérique pour le nombre de doses. Si, par malheur, la requête a échoué alors cela créera un JSONDecodeError et on avertira l'utilisateur.
+   Si la requête s'est bien passée alors vous aller récupérer une valeur numérique pour le nombre de doses. Et si ça ce n'est pas bien passé, me diriez vous? J'ai choisi la solution de facilité qui est de tester si le résultat de la requête est _None_. Mais sachez qu'il existe une exception JSONDecodeError fourni dans la librairie json (je vous laisse le soin de voir si vous voulez l'implémenter)
+   
+   5. la fonction `on_press_loop`  
+      Cette fonction permet de détecter l'appui sur une touche du clavier via la librairie `pyinput` et son module `keyboard`. Tel que je l'ai paramétré l'appuie sur la touche "F12" provoque la sortie du context manager et arrête l'application (voir ci-dessous)  
+      
+* ## La partie principale
+   C'est ici qu'on va lancer la machine 😏. 
+   Dans ma première version du code j'avais inclus les requêtes dans une boucle infinie `while` et utlisé un `time.sleep` pour les espacer. Mais je n'aime pas à avoir à aller dans le gestionnaire de tache pour arreter mes applis. J'ai donc cherché une méthode pour interrompre à partir d'une commande du clavier.  
+   Il existe l'exception `KeyboardInterrupt` inclue dans python qui permet de capturer l'emploi de <ctrl>+<c> mais du coup si j'employais cette combinaison , assez courante, pour autre chose celà risquait d'interrompre mon appli sans que je le souhaite.  
+   J'ai donc préféré utilisé une libraire externe (pyinput) qui permet d'écouter l'emploi de la souris ou du clavier et ceci même si on est en dehors de la fenêtre de l'application. Pour ce faire on utilise un context manager. L'état du 'listener' est capturé par `listener.running`. Quand on appuie sur la touche F12 alors sont état passe à `False` et celà entraine le `break`qui va interrompre la boucle.  
+   Pour la périodicité des requêtes j'ai utilisé l'écart entre deux instants capturés par `time.time()`.  
+   
+ # Conclusion
+   Et voilà la partie code est terminée. 
+   A vous de le modifier pour qu'il fonctionne pour votre centre de vaccination préférée.  
+   Vous avez peut-être remarqué que mon code a pour extension `.pyw` et pas `.py`. Cela permet de ne pas avoir de fenêtre vide s'ouvrir quand on lance l'appli.  
+   
+ # Dévelopement/Améliorations possibles 
+   Mon code n'est pas parfait.  
+   Par exemple il est nécessaire d'aller chercher à la main les informations nécessaire pour interroger l'application de Doctolib.  
+   De même les notifications visuelles ne fonctionnent en l'état que sur Windows10  
+   Ce code ne fonctionne aussi que pour la plateforme Doctolib. il faudrait surement pas mal le modifier pour qu'il fonctionne pour Maya ou  Keldoc.  
+   N'hesitez pas à forker pour l'améliorer  
+   
+ # Auteur
+   
+   [Philippe Giammarinaro](https://www.linkedin.com/in/pgiammarinaro/)
+   
  
