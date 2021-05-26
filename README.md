@@ -82,63 +82,72 @@ except ModuleNotFoundError :
    Cette fonction permet d'utiliser le synthetizeur de votre ordinateur via la librairie pyttsx3. Votre ordinateur prononcera le texte passé en paramètre.  
  
  3. la fonction `notif_toast`  
-   Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouver un moyen de le faire **forkez le moi**.  
+   Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouvez un moyen de le faire **forkez le moi**.  
    
  4. la fonction `requete_doctolib`  
-   C'est la focntion qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin:
-  
-  
- * ## La boucle qui va permettre d'interroger le site du centre de vaccination
-   Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient les informations qu'on cherche.
+   C'est la fonction qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin: . En effet je n'ai pas trouver moyen de récupérer les information directemetn sur le site via le code (si vous trouvez un moyen de le faire **forkez le moi**).  
+   Avant de commencer il faut récupérer l'adresse de l'api et ses paramêtres :  
+   
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
-   
+   >
    <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page%20centre%20compi%C3%A8gne.png?" width=50% height=50%>  
-   
+    
    Ensuite inspecter le code (clicker droit sur la page puis choix "Inspecter" ou combinaisons de ctrl+maj+i)
-   
+    
    <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/page_2_menu_click_droit.png" width=50% height=50%>  
-   
+    
    Cela va ouvrir la console. Une fois la console ouverte clicquer sur "Network" puis sur "XHR":
-   
-   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/choix_network_XHr.png" width=50% height=50%> 
+    
+   <img src="https://github.com/echidne/CovidCompiegne/blob/main/Images/choix_network_XHr.png" width=50% height=50%>  
    
    Puis choisissez un motif de consultation. Celà va entrainer l'interrogation de l'api via le fichier `availabilities.json`.
-   
+    
    <img src= "https://github.com/echidne/CovidCompiegne/blob/main/Images/voir_lefichier_json.png" width=50% height=50%>  
-   
+    
    Exemple d'un lien d'interrogation (pour une première injection Pfizer au centre de Compiègne):  
    https://www.doctolib.fr/availabilities.json?start_date=2021-05-22&visit_motive_ids=2553369&agenda_ids=470011-434292-434257-412372-435494-448029-432422-412370&insurance_sector=public&practice_ids=165271&destroy_temporary=true&limit=4   
    
    L'interogation est donc structurée comme suit :  
-   start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4   
+   > start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4   
    
-   Alors comment va-t-on utiliser ça? Pour ma part je suis allé au plus simple :
-   * La date du jour au format ISO je sais la récupérer dans le script (voir plus loin).  
-   * L'id qui indique le type d'injection ne varie pas (pour un centre donné- si on change de centre il est possible que l'id change) . Par exemple à Compiègne, l'id pour une première injection Pfizer est _2553369_ et pour une première dose de Moderna c'est _2585896_.  
+   Alors comment va-t-on utiliser ça? Pour ma part je suis allé au plus simple :  
+   * La date du jour au format ISO je sais la récupérer dans le script (`date.today().isoformat()`).  
+   * L'id qui indique le type d'injection ne varie pas (pour un centre donné- si on change de centre il est possible que l'id change) . Par exemple à Compiègne, l'id pour une première injection Pfizer est _2553369_.  
    * Les agendas_ids varient selon le centre de vaccination, le type de vaccination et le vaccinateur.  
    * Le practice_ids est l'id qui caractérise le centre de vaccination.
+   
    Ne sachant pas comment les récupérer on the fly, j'ai décidé de rentrer les 3 derniers en dur dans le code.
    
    Maintenant que donne l'interrogation de l'api? Et bien ça renvoie des données de type `.json` qui contient les informations qu'on recherche, et comme `requests`est une librairie bien faite elle fournit une fonction qui permet de décoder le retour de la requête en un sympatique dictionnaire. 
    
-   Par exemple :
-   `req = requests.get('https://www.doctolib.fr/availabilities.json?start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4', headers = header)
+   Par exemple :  
+   ```
+   req = requests.get('https://www.doctolib.fr/availabilities.json?start_date={date-du-jour}&visit_motive_ids={id qui indique le type d'injection}&agenda_ids={ids qui varient selon le lieu de vaccination et le type de vaccin}&insurance_sector={public or private}&practice_ids={id du centre}&destroy_temporary=true&limit=4', headers = header)
    
-   print(req.json())`   
-   
+   print(req.json())
+   ```   
    peut donner :
    
    exemple 1 :  
-   `{"availabilities":[],"total":0,"reason":"no_availabilities","message":"Aucune disponibilité en ligne.","number_future_vaccinations":39499}`
+   ```
+   {"availabilities":[],"total":0,"reason":"no_availabilities","message":"Aucune disponibilité en ligne.","number_future_vaccinations":39499}
+   ```  
+   
    Bon là pas de chance, pas de doses disponibles ("total":0) et donc pas de disponibilité pour réserver ("availabilities":[])  
    
    exemple 2:   
-   `{"total":0,"availabilities":[{"date":"2021-05-22","slots":[]},{"date":"2021-05-23","slots":[]},{"date":"2021-05-24","slots":[]},{"date":"2021-05-25","slots":[]}],"next_slot":"2021-07-02"}`  
-   Toujours pas de chance, pas de doses disponibles ("total":0), la liste associée à "availabilities" n'est pas vide mais les "slots" sont bien vides. Par contre on indique une prochiane disponibilité le 02 juillet ("next_slot":"2021-07-02").  
+   ```
+   {"total":0,"availabilities":[{"date":"2021-05-22","slots":[]},{"date":"2021-05-23","slots":[]},{"date":"2021-05-24","slots":[]},{"date":"2021-05-25","slots":[]}],"next_slot":"2021-07-02"}
+   ```  
    
+   Toujours pas de chance, pas de doses disponibles ("total":0), la liste associée à "availabilities" n'est pas vide mais les "slots" sont bien vides. Par contre on indique une prochaine disponibilité le 02 juillet ("next_slot":"2021-07-02"), et si on utilise cette date comme paramètre pour `start_date` alors normalement on aura des doses de dsiponibles
+    
    exemple 3:  
-   `{"availabilities":[{"date":"2021-05-22","slots":[],"substitution":null},{"date":"2021-05-23","slots":[],"substitution":null},{"date":"2021-05-24","slots":[],"substitution":null},{"date":"2021-05-25","slots":[{"agenda_id":252502,"practitioner_agenda_id":null,"start_date":"2021-05-25T12:25:00.000+02:00","end_date":"2021-05-25T12:35:00.000+02:00","steps":....,"substitution":null}],"total":3}`   
-   Là il y a des doses dispo (mais bon j'ai triché c'est chez un medecin de Lyon qui vaccine avec l'Atrazenca :) ). Il y a donc 3 doses de disponibles ("total":3) et les dates où on peut se vaire vacciner avec les créneaux horaires sont indiquées.   
+   ```
+   {"availabilities":[{"date":"2021-05-22","slots":[],"substitution":null},{"date":"2021-05-23","slots":[],"substitution":null},{"date":"2021-05-24","slots":[],"substitution":null},{"date":"2021-05-25","slots":[{"agenda_id":252502,"practitioner_agenda_id":null,"start_date":"2021-05-25T12:25:00.000+02:00","end_date":"2021-05-25T12:35:00.000+02:00","steps":....,"substitution":null}],"total":3}
+   ```
+   
+  Là il y a des doses dispo (mais bon j'ai triché c'est chez un medecin de Lyon qui vaccine avec l'Atrazenca :) ). Il y a donc 3 doses de disponibles ("total":3) et les dates où on peut se vaire vacciner avec les créneaux horaires sont indiquées.   
    
    Donc le plus simple pour savoir si des doses sont disponibles c'est d'interroger l'api via le lien cité plus haut avec `request` de récupérer la réponse par un `get` dans une varriable et de récupérer la valeur associée à 'total' :
    
