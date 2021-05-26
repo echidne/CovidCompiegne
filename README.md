@@ -21,34 +21,23 @@ N.B. : J'ai choisi une notification sous forme de 'toaster' mais qui ne va fonct
 1. ### Les librairies standards: 
    On va avoir besoin de :  
    * `datetime` pour récupérer la date du jour
-   * `time` pour créer des pauses entre chaque interrogation pour éviter de surcharger le site
+   * `time` pour interroger le site à intervalel régulier et éviter de le surcharger
    * `webbrowser`pour ouvrir la page du site via la notification
-   * `subprocess` et `sys` pour lancer l'execution de la commande shell d'installation du module `win10toast_click` à la première exécution de l'appli
+   * `subprocess` pour lancer l'execution de la commande shell d'installation des librairies manquantes
+   * `sys`pour arreter l'appli
    * `platform` pour savoir si on est bien sous le bon système d'exploitation
-   * `json.decode` pour traiter les problèmes éventuels avec les données json
-``` python
-from time import sleep
-from datetime import date
-from json.decode import JSONDecodeError
-import webbrowser
-import subprocess
-import sys
-import platform
-```
 
 2. ### Les modules non-standards:
-   Pour ce projet on va utiliser deux modules non standards: [requests](https://fr.python-requests.org/en/latest/) et [Win10toast_click](https://pypi.org/project/win10toast-click/). Vous avez peut-être déjà installé le premier pour un projet web car c'est une librairie trés répandue mais probablement pas le second. si vous ne les avez pas déjà installé le code prend soin de les installer. Bien sûr libre à vous de les installer par vous même si la méthode in code ne vous convient pas ou ne foncitonne pas. Le vous laisse jetter un oeil aux liens fournis pour les processus d'installation particuliers.
-   * Le module `requests`:
-  Cette librairie permet de réaliser des requêtes HTTP. Elle a été créée pour rendre "plus humaine " l'utilisation de la librairie standrad `urllib`
-  
-   * Le module `win10toast_click` :
-  Ce [module](https://pypi.org/project/win10toast-click/) permet de créer des toast, c'est à dire des notfications à durée limitée sous windows 10. Il existe plusieurs versions mais celle ci permet aussi de lancer une page web associée. Comme elle n'est surement pas installée à la première utilisation de l'appli on l'installe aprés avoir vérifier qu'on est bien sous windows 10 :
-  ``` python
-  try :
-    import requests
-except ModuleNotFoundError :
-    subprocess.run([sys.executable, "-m", "pip", "install", "requests"])
-    
+   Pour ce projet on va utiliser des modules non standards. Vous avez peut-être déjà installé le premier pour un projet web car c'est une librairie trés répandue mais probablement pas les autres. Si vous ne les avez pas déjà installé le code prend soin de les installer. Bien sûr libre à vous de les installer par vous même si la méthode in code ne vous convient pas ou ne fonctionne pas. Je vous laisse jetter un oeil aux liens fournis pour les processus d'installation particuliers.
+   
+   * La librairie `requests`:
+ [requests](https://fr.python-requests.org/en/latest/) permet de réaliser des requêtes HTTP. Elle a été créée pour rendre "plus humaine " l'utilisation de la librairie standrad `urllib`
+   * La librairie `pyttstx3`:
+   [pyttstx3](https://pyttsx3.readthedocs.io/en/latest/) permet de faire parler mon appli
+   
+   * La librairie `win10toast_click` :
+  Cette [librairie](https://pypi.org/project/win10toast-click/) permet de créer des toast, c'est à dire des notfications à durée limitée sous windows 10. Il existe plusieurs versions mais celle ci permet aussi de lancer une page web associée. Comme elle n'est surement pas installée à la première utilisation de l'appli on l'installe aprés avoir vérifier qu'on est bien sous windows 10 :
+  ```python
   try :
     from win10toast_click import ToastNotifier
 except ModuleNotFoundError :
@@ -56,23 +45,25 @@ except ModuleNotFoundError :
         subprocess.run([sys.executable, "-m", "pip", "install", "win10toast-click"])
     else :
         print('il faut être sous windows 10')
-        sys.exit() 
-   ```
-* ## Les variables
-1. ### création de l'instance toaster  
-   On va créer une instance du toaster afin de pouvoir ouvrir une notification quand celà sera nécesaire:  
-   ``` python
-   toaster = ToastNotifier()
-   ```
-2. ### l'adresse de la page du centre de notification  
+        sys.exit()
+   ``` 
+
+* ## Les variables globales
+
+1. ### l'adresse de la page du centre de notification  
    On associe à la variable `page_url` l'adresse de la page web correspondante au centre de vaccination qui vous interesse
    ``` python
    page_url ="https://www.doctolib.fr/vaccination-covid-19/ville/nom_du_centre_de_vaccination?"
    ```
-3. ### La création de l'_user_agent_   
+2. ### La création de l'_user_agent_   
    Afin d'éviter que vos `request`vous renvoie un code _403_, il faut ajouter un paramêtre `headers`à vos requete. Ici on utilise un dictionnaire pour se faire passer pour Chrome :).
    ``` python
    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
+   ```  
+ 3. ### L'intervalle de temps   
+   Afin d'éviter de surcharger le site Doctolib, on va introduire un intervalle de temps entre chaque requêtes. Ici j'ai mis 300 secondes (5 minutes). Libre à vous de moduler cet intervalle mais attention de ne pas interroger trop souvent le site.
+   ``` python
+   intervalle = 300
    ```
    
 * ## La fonction qui va permettre d'ouvrir la page de votre centre de vaccination à partir de la notification  
