@@ -61,10 +61,10 @@ except ModuleNotFoundError :
    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
    ```  
  3. ### L'intervalle de temps   
-   Afin d'éviter de surcharger le site Doctolib, on va introduire un intervalle de temps entre chaque requêtes. Ici j'ai mis 300 secondes (5 minutes). Libre à vous de moduler cet intervalle mais attention de ne pas interroger trop souvent le site.
-   ``` python
-   intervalle = 300
-   ```
+     Afin d'éviter de surcharger le site Doctolib, on va introduire un intervalle de temps entre chaque requêtes. Ici j'ai mis 300 secondes (5 minutes). Libre à vous de moduler    cet intervalle mais attention de ne pas interroger trop souvent le site.
+     ``` python
+    intervalle = 300
+    ```
    
 * ## La fonction qui va permettre d'ouvrir la page de votre centre de vaccination à partir de la notification  
    Cette fonction sera appelée quand vous cliquerez sur la notification.
