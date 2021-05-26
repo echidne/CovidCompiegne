@@ -56,7 +56,7 @@ except ModuleNotFoundError :
    page_url ="https://www.doctolib.fr/vaccination-covid-19/ville/nom_du_centre_de_vaccination?"
    ```
 2. ### La création de l'_user_agent_   
-   Afin d'éviter que vos `request`vous renvoie un code _403_, il faut ajouter un paramêtre `headers`à vos requete. Ici on utilise un dictionnaire pour se faire passer pour Chrome :).
+   Afin d'éviter que vos `request`vous renvoie un code _403_, il faut ajouter un paramêtre `headers`à vos requete. Ici on utilise un dictionnaire pour se faire passer pour Chrome 😏.
    ``` python
    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
    ```  
@@ -82,7 +82,7 @@ except ModuleNotFoundError :
    Cette fonction permet d'utiliser le synthetizeur de votre ordinateur via la librairie pyttsx3. Votre ordinateur prononcera le texte passé en paramètre.  
  
  3. la fonction `notif_toast`  
-   Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouvez un moyen de le faire **forkez le moi**.  
+   Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouvez un moyen de le faire **pull request le moi**.  
    
    Notification de départ:  
    ![notif1](https://github.com/echidne/CovidCompiegne/blob/main/Images/notif%201.png)  
@@ -93,7 +93,7 @@ except ModuleNotFoundError :
    Si par hasard le notifications n'apparaissaient pas, veuillez vérifier que les notifications sont activées dans les paramètres windows ("Notifications et actions") ou que "l'assistant de concentration" ne les bloque pas  
    
  4. la fonction `requete_doctolib`  
-   C'est la fonction qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin: . En effet je n'ai pas trouver moyen de récupérer les information directemetn sur le site via le code (si vous trouvez un moyen de le faire **forkez le moi**).  
+   C'est la fonction qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin: . En effet je n'ai pas trouver moyen de récupérer les information directemetn sur le site via le code (si vous trouvez un moyen de le faire **pull request le moi**).  
    Avant de commencer il faut récupérer l'adresse de l'api et ses paramêtres :  
    
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
