@@ -183,7 +183,7 @@ except ModuleNotFoundError :
    Par exemple il est nécessaire d'aller chercher à la main les informations nécessaires pour interroger l'application de Doctolib.  
    De même les notifications visuelles ne fonctionnent en l'état que sur Windows10  
    Ce code ne fonctionne aussi que pour la plateforme Doctolib. il faudrait surement pas mal le modifier pour qu'il fonctionne pour Maya ou  Keldoc.  
-   N'hesitez pas à forker pour l'améliorer  
+   N'hesitez pas à me pull request pour l'améliorer  
    
  # Auteur
    
