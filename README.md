@@ -66,8 +66,9 @@ except ModuleNotFoundError :
     intervalle = 300
     ```
    
-* ## La fonction qui va permettre d'ouvrir la page de votre centre de vaccination à partir de la notification  
-   Cette fonction sera appelée quand vous cliquerez sur la notification.
+* ## Les fonctions.  
+1. la fonction `open_url()`  
+   On va se servir de la librairie `webbrowser` fournit en standard avec python. Cette librairie va utiliser votre browser déni par défaut dans votre système pour ouvrir la page web de votre centre. À noter, sur mon ordinateur webbrowser ne lève pas d'exception si la page web n'existe pas ou s'il y a un problème pour l'ouvrir. J'ai du passé par `requests` pour tester la page.  
    
    ``` python
    def open_url():
@@ -76,9 +77,18 @@ except ModuleNotFoundError :
         webbrowser.open_new(page_url)
     except requests.ConnectionError : 
         print('Failed to open URL. Unsupported variable type.')
-   ```
+   ```  
+ 2. la fonction `notif_sonore`  
+   Cette fonction permet d'utiliser le synthetizeur de votre ordinateur via la librairie pyttsx3. Votre ordinateur prononcera le texte passé en paramètre.  
+ 
+ 3. la fonction `notif_toast`  
+   Cette fonction permet d'afficher d'afficher un _toast_ ou bulle de notification en français. Pour ce faire je me suis servi de la librairie `win10toast_click` bien quelle ne fonctionne que sous windows 10. En effet c'est la seule librairie que j'ai trouvée qui me permet d'ajouter une action si on clique sur la notification. Il ya plusieurs librairies de notification multiplateformes mais aucune ne permet d'ajouter une action à la notification simplement. Si vous trouver un moyen de le faire **forkez le moi**.  
+   
+ 4. la fonction `requete_doctolib`  
+   C'est la focntion qui va vous permettre de faire des requetes sur Doctolib. Mais pour trouver les paramètres à lui fournir il va falloir mettre les mains un peu dans le cambouis :grin:
   
-  * ## La boucle qui va permettre d'interroger le site du centre de vaccination
+  
+ * ## La boucle qui va permettre d'interroger le site du centre de vaccination
    Avant de commencer il faut récupérer l'adresse du fichier `.json` qui contient les informations qu'on cherche.
    Tout d'abord il faut se rendre sur le site du centre de vaccination. Ici le centre de Compiègne :  
    
