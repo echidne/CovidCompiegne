@@ -176,7 +176,7 @@ except ModuleNotFoundError :
  # Conclusion
    Et voilà la partie code est terminée. 
    A vous de le modifier pour qu'il fonctionne pour votre centre de vaccination préférée.  
-   Vous avez peut-être remarqué que mon code a pour extension `.pyw` et pas `.py`. Cela permet de ne pas avoir de fenêtre vide s'ouvrir quand on lance l'appli.  
+   Vous avez peut-être remarqué que mon code a pour extension `.pyw` et pas `.py`. Cela permet de ne pas avoir de fenêtre vide s'ouvrir quand on lance l'appli en double cliquant sous Windows10. C'est l'équivalent de la command `pythonw file.py`  
    
  # Dévelopement/Améliorations possibles 
    Mon code n'est pas parfait.  
