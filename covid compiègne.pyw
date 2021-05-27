@@ -16,19 +16,19 @@ import platform
 try :
     import requests
 except ModuleNotFoundError :
-    subprocess.run([sys.executable, "-m", "pip3", "install", "requests"])
+    subprocess.run([sys.executable, "-m", "pip", "install", "requests"])
 
 # pynput pour capturer les évènements en dehors du programme (ici les évènements clavier)
 try :
     from pynput import keyboard
 except ModuleNotFoundError :
-    subprocess.run([sys.executable, "-m", "pip3", "install", "pynput"])
+    subprocess.run([sys.executable, "-m", "pip", "install", "pynput"])
 
 # pyttstx3 pour une notification sonore
 try :
     import pyttsx3
 except ModuleNotFoundError :
-    subprocess.run([sys.executable, "-m", "pip3", "install", "pyttsx3"])
+    subprocess.run([sys.executable, "-m", "pip", "install", "pyttsx3"])
 
 # win10toast_click pour un toaster avec click sous Windows 10
 try :
