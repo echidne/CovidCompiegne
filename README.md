@@ -169,7 +169,7 @@ except ModuleNotFoundError :
 * ## La partie principale
    C'est ici qu'on va lancer la machine 😏. 
    Dans ma première version du code j'avais inclus les requêtes dans une boucle infinie `while` et utlisé un `time.sleep` pour les espacer. Mais je n'aime pas à avoir à aller dans le gestionnaire de tache pour arreter mes applis. J'ai donc cherché une méthode pour interrompre à partir d'une commande du clavier.  
-   Il existe l'exception `KeyboardInterrupt` inclue dans python qui permet de capturer l'emploi de <ctrl>+<c> mais du coup si j'employais cette combinaison , assez courante, pour autre chose celà risquait d'interrompre mon appli sans que je le souhaite.  
+   Il existe l'exception `KeyboardInterrupt` inclue dans python qui permet de capturer l'emploi de `<ctrl>+<c>` mais du coup si j'employais cette combinaison , assez courante, pour autre chose celà risquait d'interrompre mon appli sans que je le souhaite.  
    J'ai donc préféré utilisé une libraire externe (pyinput) qui permet d'écouter l'emploi de la souris ou du clavier et ceci même si on est en dehors de la fenêtre de l'application. Pour ce faire on utilise un context manager. L'état du 'listener' est capturé par `listener.running`. Quand on appuie sur la touche F12 alors sont état passe à `False` et celà entraine le `break`qui va interrompre la boucle.  
    Pour la périodicité des requêtes j'ai utilisé l'écart entre deux instants capturés par `time.time()`.  
    
