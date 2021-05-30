@@ -68,7 +68,7 @@ except ModuleNotFoundError :
    
 * ## Les fonctions.  
 1. la fonction `open_url()`  
-   On va se servir de la librairie `webbrowser` fournit en standard avec python. Cette librairie va utiliser votre browser déni par défaut dans votre système pour ouvrir la page web de votre centre. À noter, sur mon ordinateur webbrowser ne lève pas d'exception si la page web n'existe pas ou s'il y a un problème pour l'ouvrir. J'ai du passé par `requests` pour tester la page.  
+   On va se servir de la librairie `webbrowser` fournit en standard avec python. Cette librairie va utiliser votre browser déni par défaut dans votre système pour ouvrir la page web de votre centre. À noter, sur mon ordinateur webbrowser ne lève pas d'exception si la page web n'existe pas ou s'il y a un problème pour l'ouvrir. J'ai du passer par `requests` pour tester la page.  
    
    ``` python
    def open_url():
