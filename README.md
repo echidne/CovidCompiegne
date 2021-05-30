@@ -3,7 +3,7 @@ Appli in python to receive notification when doses for first injection of vaccin
 As the code is done : work only when doses for first injection are available in "Centre de vaccination de Compiègne (60200) France"  
 All commentaries in code and history below are in French for 2 main reasons :
 1. I'm sharing the code with French python students
-2. This code will work only in France
+2. This code is interesting only for people that are located in France.
 
 
 # Histoire
